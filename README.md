@@ -7,7 +7,7 @@ Submission: df_Final.txt
 The final transformed data or submitted tidy data set can be read into R via the following command:
 ```{r}
 theURL <- "https://s3.amazonaws.com/coursera-uploads/user-e05c1cc6754a16e0bee7ccd1/972136/asst-3/ee663650e1d011e3b9d5c185ab390dc2.txt"
-download.file(file=theURL, destfile="location.txt")
+download.file(url=theURL, destfile="location.txt")
 read.table(file="location.txt", sep=",")
 
 ```
