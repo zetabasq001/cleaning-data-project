@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>CodeBook</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+
+
+
+
+</head>
+
+<body>
+<h1>CodeBook</h1>
+
+<p><strong>Objective of CodeBook</strong>
+This is a Codebook describing the variables, data, and transformations that 
+the author applied to complete the Course Project for <em>Getting
+and Cleaning Data,</em> a MOOC presented by John Hopkins University via Coursera Platform.</p>
+
+<p><strong>Description of Raw Data</strong>
+The data was collected via a wearable device with smartphones while 30 subjects
+engaged in six physical activites. 561 measurements were collected
+during these six activities.</p>
+
+<p>Data Set Reference: <em>Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly Support Vector Machine. International Workshop of Ambient Assisted Living (IWAAL 2012). Vitoria-Gasteiz, Spain. Dec 2012</em></p>
+
+<p><strong>How Data was Manipulated and Transformed</strong>
+<em>Download and Unzip</em>
+The data was originally downloaded and unziped.  A total of 8 files were scanned in corresponding to test/training subjects, test/training data sets, test/training activites, feature variables names, and word description of activities.</p>
+
+<p><em>Select and Replace</em>
+The grep function was used to find vector positions of feature variable names with mean() and std() embedded in them for later selection reducing feature variables from 561 to 86 feature variables.
+The gsub function was used to replace short feature variable names by longer word description e.g. from Acc to Accelerometer. Furthermore, nominal activites numbers were changed to word description of activities e.g. from 5 to STANDING by using their vector position.
+The strsplit function was used to separate the numeral from the word descriptions of activites and feature variables and the numerals removed.</p>
+
+<p><em>Merge both Data Sets</em>
+A matrix was created by row to accomodate the test/training data sets and the feature variable names were placed in as the names of columns, then the desired feature variables were selected from matrix that was then converted to a data frame. This data frame was then attached to the Subject and Activities columns for a total of 88 columns.</p>
+
+<p><em>Reshape, Melt, and Casting</em>
+The reshape2 package was attached and the melt and dcast functions were used to reshape and find the averages of means and standard deviations corresponding to subject and activity. </p>
+
+<p>Using lapply function the 88 column data frame was broken into a list with 86 components corresponding to a melted data frame i.e. each melted data frame contained subjects, activities, and one feature variable. Then the dcast function was used on each component to find the average using the mean function for each subject and each activity using the formula parameter: Subjects~Activities. Then each component or data frame was melted and then reassembled: arriving at final data frame with 86 feature columns, 180 rows corresponding to 30 subjects and 6 physical activities, and the cells corrsponding to the averages that is an average of example given, &ldquo;Subject 1, STANDING, feature variable&rdquo;.</p>
+
+<p>The R script code contains comments with additional details.</p>
+
+</body>
+
+</html>
+
