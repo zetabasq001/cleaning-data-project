@@ -58,7 +58,7 @@ act_nominals <- c(test_data[[3]], train_data[[3]])
 # second, reading in activity labels corresponding to nominal numbers
 activity_labels <- scan("../activity_labels.txt", character(), sep="\n")
 
-# following two lines tidies up activity labels by
+# following two lines tidy up activity labels by
 # splitting string and removing front number from activity label 
 activity_labels <- lapply(activity_labels, function(x) x <- strsplit(x, split=" "))
 activity_labels <- lapply(activity_labels, function(x) x <- unlist(x)[-1])
@@ -87,12 +87,33 @@ names(df_subj_act) <- c("Subjects", "Activities")
 df_to_Pt4 <- data.frame(df_subj_act, df_Sets)
 
 # Step 5:
+# library needed to use melt and dcast functions to reshape data
 library(reshape2)
+
+# creates a list of melted data frames: each data frame in list has 
+# Subjects and Activities with one corresponding feature variable
 ls_of_melts <- lapply(3:88, function(x) melt(df_to_Pt4, id.vars=c("Subjects","Activities"), measure.vars=x, variable.name="Feature.Variable", value.name="Feature.Values"))
+
+# recast all data frames in list by taking mean with respect to subject and 
+# activity of each feature variable
 ls_of_dcast <- lapply(ls_of_melts, function(x) dcast(x, Subjects~Activities, mean))
+
+# melts again each data frame in list so that subject and activity are side by side 
+# with corresponding average of feature variable
 ls_of_melts2 <- lapply(ls_of_dcast, function(x) melt(x, id.vars="Subjects", variable.name="Activities"))
+
+# extracts subject and activities columns
 df_final1 <- ls_of_melts2[[1]][c(1,2)]
+
+# extracts each feature variable from each data frame in list
 df_final2 <- lapply(ls_of_melts2, function(x) x <- as.data.frame(x[c(-1,-2)]))
+
+# reassembles parts into one final data frame i.e. all averages of feature variables
+# corresponding to subject and activity
 df_Final <- data.frame(df_final1, df_final2)
+
+# puts back the names into final data frame
 names(df_Final)[3:88] <- names(df_to_Pt4[,3:88])
+
+# writes data frame into text file 
 write.table(df_Final, "../df_Final.txt", sep=",")
